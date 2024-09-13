@@ -1,2 +1,2 @@
-# Musinsa
-무신사 자바 백엔드 과제
+# MUSINSA 무신사 Java(kotlin) Backend
+
