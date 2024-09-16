@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API 테스트 페이지</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<h1>API 테스트</h1>
+<button id="testApiBtn">API 테스트하기</button>
+<div id="result"></div>
+
+<script>
+    document.getElementById('testApiBtn').addEventListener('click', function() {
+        fetch('/price/categories/lowest-price')  // 예시 API URL
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').textContent = JSON.stringify(data);
+            });
+    });
+</script>
+</body>
+</html>

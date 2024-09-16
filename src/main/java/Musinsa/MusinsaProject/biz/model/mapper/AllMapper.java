@@ -12,18 +12,19 @@ import org.mapstruct.Mapping;
 import static org.mapstruct.ReportingPolicy.IGNORE;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = IGNORE)
 public interface AllMapper {
-    Brand fromEntity(BrandEntity brandEntity);
-    @Mapping(target = "registerYmdt", source = "registerYmdt")
-    @Mapping(target = "updateYmdt", source = "updateYmdt")
+//    @Mapping(target = "registerYmdt", source = "registerYmdt")
+//    @Mapping(target = "updateYmdt", source = "updateYmdt")
     BrandEntity toEntity(Brand brand);
+
+    Brand fromEntity(BrandEntity brandEntity);
 
     Category fromEntity(CategoryEntity categoryEntity);
     CategoryEntity toEntity(Category category);
 
     Product fromEntity(ProductEntity productEntity);
-    @Mapping(source = "name", target = "name")
-    @Mapping(source = "price", target = "price")
-    @Mapping(source = "brandId.id", target = "brandId.id")
-    @Mapping(source = "categoryId.id", target = "categoryId.id")
+//    @Mapping(source = "name", target = "name")
+//    @Mapping(source = "price", target = "price")
+//    @Mapping(source = "brandId.id", target = "brandId.id")
+//    @Mapping(source = "categoryId.id", target = "categoryId.id")
     ProductEntity toEntity(Product product);
 }

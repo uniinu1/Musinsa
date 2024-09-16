@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+
 @Getter
 @Setter
 @Schema(title = "브랜드", description = "")
@@ -21,4 +22,12 @@ public class Brand {
 
     @Schema(title = "수정일")
     private LocalDateTime updateYmdt;
+
+    // 모든 필드를 받는 생성자
+    public Brand(Long id, String name, LocalDateTime registerYmdt, LocalDateTime updateYmdt) {
+        this.id = id;
+        this.name = name;
+        this.registerYmdt = registerYmdt;
+        this.updateYmdt = updateYmdt;
+    }
 }

@@ -19,7 +19,7 @@ public class ProductController {
     //List로 받아 여러 개 등록 가능하도록 함
     @PostMapping
     @Operation(summary = "상품 추가")
-    public void postBrand(@RequestBody List<Product> products){productUseCase.postProduct(products);}
+    public void postProduct(@RequestBody List<Product> products){productUseCase.postProduct(products);}
 
     @PatchMapping
     @Operation(summary = "상품 수정")

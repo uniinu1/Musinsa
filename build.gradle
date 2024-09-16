@@ -9,7 +9,7 @@ version = '0.0.1-SNAPSHOT'
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
+		languageVersion = JavaLanguageVersion.of(17) // Java 17로 설정
 	}
 }
 
@@ -18,29 +18,38 @@ repositories {
 }
 
 dependencies {
-	// Jakarta Persistence API 사용 (javax 대신)
-	implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
+	// Lombok 및 MapStruct 설정
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 
-	// JOOQ 라이브러리 사용
+	// MapStruct
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+
+	// Spring Boot 관련 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-jooq'
+
+	// JOOQ 의존성
 	implementation 'org.jooq:jooq:3.17.6'
 	implementation 'org.jooq:jooq-meta:3.17.6'
 	implementation 'org.jooq:jooq-codegen:3.17.6'
 
-	// Spring Boot와 관련된 의존성
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+	// H2 데이터베이스
+	runtimeOnly 'com.h2database:h2'
 
-	// 기타 라이브러리
+	// JUnit 테스트
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// Swagger Annotations
 	implementation 'io.swagger.core.v3:swagger-annotations:2.1.10'
+
+	// 기타 필요 라이브러리
 	implementation 'org.webjars:webjars-locator-core:0.51'
 	implementation 'io.github.classgraph:classgraph:4.8.104'
-	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.h2database:h2'
-	annotationProcessor 'org.projectlombok:lombok'
 }
 
-tasks.named('test') {
+test {
 	useJUnitPlatform()
 }
