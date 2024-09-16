@@ -29,8 +29,8 @@ public class BrandController {
         return ResponseEntity.noContent().build();
     }
 
-    //ids를 List로 받아 여러 개 삭제 가능하도록 함
-    //Brand에 속한 Product가 있을 때 해결방안 1 : 삭제 방지 경고 메시지 반환
+    // ids를 List로 받아 여러 개 삭제 가능하도록 함
+    // Brand에 속한 Product가 있을 때 해결방안 1 : 삭제 방지 경고 메시지 반환
     @DeleteMapping("/alert")
     @Operation(summary = "브랜드 삭제")
     public ResponseEntity<Void> deleteAlertBrand(@RequestBody List<Long> ids) {
@@ -39,8 +39,8 @@ public class BrandController {
         return ResponseEntity.noContent().build();
     }
 
-    //ids를 List로 받아 여러 개 삭제 가능하도록 함
-    //Brand에 속한 Product가 있을 때 해결방안 2 : 상품 삭제 후 브랜드 삭제
+    // ids를 List로 받아 여러 개 삭제 가능하도록 함
+    // Brand에 속한 Product가 있을 때 해결방안 2 : 상품 삭제 후 브랜드 삭제
     @DeleteMapping("/productDelete")
     @Operation(summary = "브랜드 삭제")
     public ResponseEntity<Void> deleteProductBrand(@RequestBody List<Long> ids) {
