@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 //BrandController 통합테스트
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @AutoConfigureMockMvc
 public class BrandControllerTest {
     @Autowired
@@ -63,10 +63,9 @@ public class BrandControllerTest {
     @Test
     void testDeleteAlertBrand() throws Exception {
         // 여러 개의 ID 삭제 요청
-        Long[] ids = {38l};
-        String idsJson = objectMapper.writeValueAsString(Arrays.asList(ids));
+        String idsJson = "[47,48]";
 
-        // /alert endpoint에 DELETE 요청을 보내고, 결과를 검증
+        // alert endpoint에 DELETE 요청을 보내고, 결과를 검증
         mockMvc.perform(delete("/brand/alert")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(idsJson))
