@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품 업데이트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .popup {
+            width: 300px;
+            padding: 20px;
+            margin: 10px auto;
+            background-color: white;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        .popup h3 {
+            margin-bottom: 20px;
+        }
+        .popup input {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+        }
+        .popup button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        .popup button.close {
+            background-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+<div class="popup">
+    <h3>상품 업데이트</h3>
+    <div>
+        <label for="productId">상품 ID: </label>
+        <input type="text" id="productId" placeholder="수정할 상품의 id를 입력해주세요">
+    </div>
+    <div>
+        <label for="productNameInput">상품 이름: </label>
+        <input type="text" id="productNameInput" placeholder="상품 이름을 입력하세요">
+    </div>
+    <div>
+        <label for="price">상품 가격:    </label>
+        <input type="text" id="price" placeholder="가격을 입력하세요">
+    </div>
+    <div>
+        <label for="categoryId">카테고리 ID: </label>
+        <input type="text" id="categoryId" placeholder="카테고리 id를 입력하세요">
+    </div>
+    <div>
+        <label for="brandId">브랜드 ID: </label>
+        <input type="text" id="brandId" placeholder="브랜드 id를 입력하세요">
+    </div>
+    <button id="saveProductBtn">저장</button>
+</div>
+<script>
+    // 상품 저장 버튼 클릭 시 처리
+    document.getElementById('saveProductBtn').addEventListener('click', function() {
+        const productId = document.getElementById('productId').value.trim();
+        const productName = document.getElementById('productNameInput').value.trim();
+        const price = document.getElementById('price').value.trim();
+        const categoryId = document.getElementById('categoryId').value.trim();
+        const brandId = document.getElementById('brandId').value.trim();
+
+        if (productId === '') {
+            alert('상품 id를 입력해주세요.');
+            return;
+        }
+
+        // 수정 데이터 객체
+        const updateData = {};
+
+        // 입력값이 있을 때만 해당 필드를 포함
+        if (productName) {
+            updateData.name = productName;
+        }
+
+        if (price) {
+            updateData.price = price;
+        }
+
+        if (categoryId) {
+            updateData.categoryId = { id: categoryId };
+        }
+
+        if (brandId) {
+            updateData.brandId = { id: brandId };
+        }
+
+        console.log(updateData);
+
+        // 값이 없으면 경고 후 return 처리
+        if (Object.keys(updateData).length === 0) {
+            alert('수정할 내용을 입력해주세요.');
+            return;
+        }
+
+        // API 호출 (PATCH 방식)
+        fetch(`/product?id=${productId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updateData) // 수정된 부분만 전송
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.message); });
+                }
+                return response.text();
+            })
+            .then(() => {
+                alert('상품이 성공적으로 업데이트되었습니다.');
+                window.close();  // 업데이트 후 메인 페이지로 이동
+            })
+            .catch(error => {
+                console.error('Error updating product:', error);
+                alert(`상품 업데이트 중 오류가 발생했습니다.: ${error.message}`);
+            });
+    });
+</script>
+</body>
+</html>

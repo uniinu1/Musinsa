@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>브랜드 업데이트</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .popup {
+      width: 300px;
+      padding: 20px;
+      margin: 10px auto;
+      background-color: white;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    .popup h3 {
+      margin-bottom: 20px;
+    }
+    .popup input {
+      width: 80%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+    }
+    .popup button {
+      padding: 10px 20px;
+      margin-right: 10px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    .popup button.close {
+      background-color: #f44336;
+    }
+  </style>
+</head>
+<body>
+
+<div class="popup">
+  <h3>브랜드 업데이트</h3>
+  <div>
+    <label for="brandIdInput">수정할 브랜드 ID: </label>
+    <input type="text" id="brandIdInput" placeholder="수정할 브랜드 Id를 입력하세요.">
+  </div>
+  <div>
+    <label for="brandNameInput">브랜드 이름: </label>
+    <input type="text" id="brandNameInput" placeholder="브랜드 이름을 입력하세요">
+  </div>
+  <button id="saveBrandBtn">저장</button>
+</div>
+
+<script>
+  // 브랜드 저장 버튼 클릭 시 처리
+  document.getElementById('saveBrandBtn').addEventListener('click', function() {
+    const id = document.getElementById('brandIdInput').value;
+    const brandName = document.getElementById('brandNameInput').value;
+
+    if (id.trim() === '') {
+      alert('브랜드 id를 입력해주세요.');
+      return;
+    }
+
+    if (brandName.trim() === '') {
+      alert('브랜드 이름을 입력해주세요.');
+      return;
+    }
+
+    // API 호출 (PATCH 방식)
+    fetch(`/brand?id=${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+
+      body: JSON.stringify({ name: brandName })
+    })
+            .then(response => {
+              if (!response.ok) {
+                // 응답이 실패했을 경우 에러를 던짐
+                return response.json().then(err => { throw new Error(err.message); });
+              }
+              return response.text();
+            })
+            .then(() => {
+              alert('브랜드가 성공적으로 업데이트되었습니다.');
+              window.close();  // 업데이트 후 메인 페이지로 이동
+            })
+            .catch(error => {
+              alert(`브랜드 업데이트 중 오류가 발생했습니다: ${error.message}`);
+              console.error('Error:', error);
+            });
+  });
+</script>
+
+</body>
+</html>

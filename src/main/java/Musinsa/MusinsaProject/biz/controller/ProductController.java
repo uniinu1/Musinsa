@@ -16,6 +16,13 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
     private final ProductUseCase productUseCase;
+
+    @GetMapping
+    @Operation(summary = "브랜드 조회")
+    public List<Product> getProduct() {
+        return productUseCase.getProduct();
+    }
+
     //List로 받아 여러 개 등록 가능하도록 함
     @PostMapping
     @Operation(summary = "상품 추가")
@@ -32,7 +39,7 @@ public class ProductController {
     //ids를 List로 받아 여러 개 삭제 가능하도록 함
     @DeleteMapping
     @Operation(summary = "상품 삭제")
-    public ResponseEntity<Void> deleteBrand(@RequestBody List<Long> ids) {
+    public ResponseEntity<Void> deleteProduct(@RequestBody List<Long> ids) {
         productUseCase.deleteProduct(ids);
         //요청이 성공적으로 처리되었지만, 추가로 반환할 데이터는 없을 때 리턴값
         return ResponseEntity.noContent().build();

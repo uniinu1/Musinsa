@@ -14,6 +14,10 @@ import java.util.List;
 @AllArgsConstructor
 public class BrandUseCase {
     private BrandService brandService;
+
+    public List<Brand> getBrand() {
+        return brandService.selectBrand();
+    }
     @Transactional
     public void postBrand(List<Brand> brands){
         brandService.insertBrand(brands);

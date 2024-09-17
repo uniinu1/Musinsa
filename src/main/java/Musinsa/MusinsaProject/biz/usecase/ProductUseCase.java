@@ -14,6 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductUseCase {
     private ProductService productService;
+
+    public List<Product> getProduct() {
+        return productService.selectProduct();
+    }
+
     @Transactional
     public void postProduct(List<Product> products){
         productService.insertProduct(products);

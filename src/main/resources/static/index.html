@@ -5,9 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API 테스트 페이지</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            background-color: rgba(128, 128, 128, 0.7);  /* Gray with 70% transparency */
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .tabs button {
+            padding: 10px 20px;
+            border: none;
+            border-bottom: 2px solid transparent;
+            background-color: #f1f1f1;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        .tabs button.active {
+            border-bottom: 2px solid #333;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .tab-content.active {
+            display: block;
+        }
         table {
-            width: 50%;
+            width: 70%;
             border-collapse: collapse;
+            margin: 0 auto;
         }
         th, td {
             border-bottom: 1px solid #ccc;
@@ -20,31 +55,93 @@
         tbody tr:last-child td {
             border-bottom: none;
         }
+        select {
+            margin: 20px 0;
+        }
     </style>
-    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 <h1>API 테스트 페이지</h1>
-<button id="testApiBtn">구현 1) API 테스트하기</button>
-<button id="testApiBtn2">구현 2) API 테스트하기</button>
-<button id="testApiBtn3">구현 3) API 테스트하기</button>
-<div id="result"></div>
-<div>
-    <select>
-        <option>상의</option>
-        <option></option>
-        <option></option>
-        <option></option>
-        <option></option>
-        <option></option>
-        <option></option>
-        <option></option>
-        <option></option>
-    </select>
+
+<div class="tabs">
+    <button class="tab-link active" data-tab="tab1">구현 1</button>
+    <button class="tab-link" data-tab="tab2">구현 2</button>
+    <button class="tab-link" data-tab="tab3">구현 3</button>
+    <button class="tab-link" data-tab="tab4">구현 4 - 브랜드</button>
+    <button class="tab-link" data-tab="tab5">구현 4 - 상품</button>
 </div>
+
+<div id="tab1" class="tab-content active">
+    <p>구현 1) - 카테고리 별 최저가격 브랜드와 상품 가격, 총액을 조회하는 API</p>
+    <button id="testApiBtn">구현 1) API 테스트하기</button>
+    <div id="result1"></div>
+</div>
+
+<div id="tab2" class="tab-content">
+    <p>구현 2) - 단일 브랜드로 모든 카테고리 상품을 구매할 때 최저가격에 판매하는 브랜드와 카테고리의 상품가격, 총액을 조회하는 API</p>
+    <button id="testApiBtn2">구현 2) API 테스트하기</button>
+    <div id="result2"></div>
+</div>
+
+<div id="tab3" class="tab-content">
+    <p>구현 3) - 카테고리 이름으로 최저, 최고 가격 브랜드와 상품 가격을 조회하는 API</p>
+    <div>
+        <select id="categorySelect">
+            <option>상의</option>
+            <option>아우터</option>
+            <option>바지</option>
+            <option>스니커즈</option>
+            <option>가방</option>
+            <option>모자</option>
+            <option>양말</option>
+            <option>액세서리</option>
+        </select>
+        <button id="testApiBtn3">구현 3) API 테스트하기</button>
+    </div>
+    <div id="result3"></div>
+</div>
+
+<div id="tab4" class="tab-content">
+    <p>브랜드 CRUD</p>
+    <div>
+        <button id="brandGet">브랜드 조회</button>
+        <button id="brandCreate">브랜드 생성</button>
+        <button id="brandUpdate">브랜드 업데이트</button>
+        <button id="brandDeleteAlert">브랜드 삭제(연계된 상품이 있으면 경고 문구)</button>
+        <button id="brandDelete">브랜드 삭제(연계된 상품이 있으면 상품 같이 삭제)</button>
+    </div>
+    <div id="result4"></div>
+</div>
+
+<div id="tab5" class="tab-content">
+    <p>상품 CRUD</p>
+    <div>
+        <button id="productGet">상품 조회</button>
+        <button id="productCreate">상품 생성</button>
+        <button id="productUpdate">상품 업데이트</button>
+        <button id="productDelete">상품 삭제(연계된 상품이 있으면 경고 문구)</button>
+    </div>
+    <div id="result5"></div>
+</div>
+
 <script>
+    // 탭 기능 구현
+    const tabLinks = document.querySelectorAll('.tab-link');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            tabLinks.forEach(link => link.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            this.classList.add('active');
+            document.getElementById(this.getAttribute('data-tab')).classList.add('active');
+        });
+    });
+
+    // 구현 1 API 호출
     document.getElementById('testApiBtn').addEventListener('click', function() {
-        fetch('/price/categories/lowest-price')  // 예시 API URL
+        fetch('/price/categories/lowest-price')
             .then(response => response.json())
             .then(data => {
                 const products = data.products;
@@ -54,24 +151,124 @@
                 });
                 tableHTML += `<tr><td colspan="2"><strong>총액</strong></td><td>${data.totalPrice.toLocaleString()}</td></tr>`;
                 tableHTML += "</table>";
-                document.getElementById('result').innerHTML = tableHTML;
+                document.getElementById('result1').innerHTML = tableHTML;
             });
     });
 
+    // 구현 2 API 호출
     document.getElementById('testApiBtn2').addEventListener('click', function() {
-        fetch('/price/brand/lowest-price')  // 예시 API URL
+        fetch('/price/brand/lowest-price')
             .then(response => response.json())
             .then(data => {
-                document.getElementById('result').textContent = JSON.stringify(data);
+                document.getElementById('result2').textContent = JSON.stringify(data);
             });
     });
 
+    // 구현 3 API 호출
     document.getElementById('testApiBtn3').addEventListener('click', function() {
-        fetch('/price/categories/best-price')  // 예시 API URL
+        const selectedCategory = document.getElementById('categorySelect').value;
+
+        // GET 방식으로 선택된 값을 쿼리 파라미터로 전송
+        fetch(`/price/categories/best-price?categoryName=${encodeURIComponent(selectedCategory)}`)
             .then(response => response.json())
             .then(data => {
-                document.getElementById('result').textContent = JSON.stringify(data);
+                document.getElementById('result3').textContent = JSON.stringify(data);
             });
+    });
+
+    //구현4) Brand 조회
+    document.getElementById('brandGet').addEventListener('click', function() {
+        fetch('/brand')
+            .then(response => response.json())
+            .then(data => {
+                // 브랜드 데이터를 테이블 형식으로 변환
+                let tableHTML = "<div style='margin-top: 20px'></div><table><tr><th>ID</th><th>이름</th><th>등록일</th><th>수정일</th></tr>";
+                data.forEach(brand => {
+                    tableHTML += `<tr>
+                                    <td>${brand.id}</td>
+                                    <td>${brand.name}</td>
+                                    <td>${new Date(brand.registerYmdt).toLocaleString()}</td>
+                                    <td>${new Date(brand.updateYmdt).toLocaleString()}</td>
+                                  </tr>`;
+                });
+                tableHTML += "</table></div>";
+                document.getElementById('result4').innerHTML = tableHTML; // 결과를 result4에 표시
+            });
+    });
+
+    //구현4) Brand 생성 팝업으로 이동
+    document.getElementById('brandCreate').addEventListener('click', function() {
+        // 새 창을 팝업처럼 작게 열기
+        window.open('/createBrand.html', '브랜드 생성', 'width=400,height=300,top=200,left=200');
+    });
+
+    //구현4) Brand 업데이트 팝업으로 이동
+    document.getElementById('brandUpdate').addEventListener('click', function() {
+        // 새 창을 팝업처럼 작게 열기
+        window.open('/updateBrand.html', '브랜드 업데이트', 'width=400,height=300,top=200,left=200');
+    });
+
+    //구현4) Brand 삭제 팝업으로 이동 : 연계된 상품이 있으면 경고문구
+    document.getElementById('brandDeleteAlert').addEventListener('click', function() {
+        // 새 창을 팝업처럼 작게 열기
+        window.open('/deleteBrandAlert.html', '브랜드 삭제', 'width=400,height=300,top=200,left=200');
+    });
+
+    //구현4) Brand 삭제 팝업으로 이동 : 연계된 상품이 있으면 상품도 같이 삭제
+    document.getElementById('brandDelete').addEventListener('click', function() {
+        // 새 창을 팝업처럼 작게 열기
+        window.open('/brandDeleteAll.html', '브랜드 삭제', 'width=400,height=300,top=200,left=200');
+    });
+
+    //구현4) Product 조회
+    document.getElementById('productGet').addEventListener('click', function() {
+        fetch('/product')
+            .then(response => response.json())
+            .then(data => {
+                // 상품 데이터를 테이블 형식으로 변환
+                let tableHTML = "<div style='margin-top: 20px'></div>" +
+                    "<table>" +
+                        "<tr>" +
+                            "<th>ID</th>" +
+                            "<th>카테고리Id</th>" +
+                            "<th>카테고리명</th>" +
+                            "<th>브랜드ID</th>" +
+                            "<th>브랜드명</th>" +
+                            "<th>상품명</th>" +
+                            "<th>가격</th>" +
+                        "</tr>";
+                data.forEach(product => {
+                    tableHTML += `<tr>
+                                    <td>${product.id}</td>
+                                    <td>${product.categoryId.id}</td>
+                                    <td>${product.categoryId.name}</td>
+                                    <td>${product.brandId.id}</td>
+                                    <td>${product.brandId.name}</td>
+                                    <td>${product.name}</td>
+                                    <td>${product.price}</td>
+                                  </tr>`;
+                });
+                tableHTML += "</table></div>";
+                document.getElementById('result5').innerHTML = tableHTML; // 결과를 result4에 표시
+            });
+    });
+
+    //구현4) Product 생성 팝업으로 이동
+    document.getElementById('productCreate').addEventListener('click', function() {
+        // 새 창을 팝업처럼 작게 열기
+        window.open('/createProduct.html', '상품 생성', 'width=400,height=500,top=200,left=200');
+    });
+
+    //구현4) Product 업데이트 팝업으로 이동
+    document.getElementById('productUpdate').addEventListener('click', function() {
+        // 새 창을 팝업처럼 작게 열기
+        window.open('/updateProduct.html', '상품 업데이트', 'width=400,height=550,top=200,left=200');
+    });
+
+    //구현4) Product 삭제 팝업으로 이동
+    document.getElementById('productDelete').addEventListener('click', function() {
+        // 새 창을 팝업처럼 작게 열기
+        window.open('/deleteProduct.html', '상품 삭제', 'width=400,height=300,top=200,left=200');
     });
 </script>
 </body>

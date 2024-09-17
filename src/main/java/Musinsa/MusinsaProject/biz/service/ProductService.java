@@ -21,6 +21,13 @@ public class ProductService {
     private final BrandRepository brandRepository;
     private final AllMapper allMapper;
 
+    public List<Product> selectProduct(){
+        List<ProductEntity> productEntities = productRepository.findAll();
+        return productEntities.stream()
+                .map(allMapper::fromEntity) // ProductEntity를 Product로 변환
+                .collect(Collectors.toList());
+    }
+
     public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, BrandRepository brandRepository, AllMapper allMapper) {
         this.productRepository = productRepository;
         this.brandRepository = brandRepository;
@@ -50,12 +57,12 @@ public class ProductService {
         } catch (DataIntegrityViolationException ex) {
             // 카테고리 ID 관련 외래 키 위반 오류 처리
             if (ex.getCause() != null && ex.getCause().getMessage().contains("CATEGORY_ENTITY")) {
-                throw new RuntimeException("Invalid categoryId: 카테고리가 존재하지 않습니다. id를 확인해주세요.");
+                throw new RuntimeException("카테고리가 존재하지 않습니다. id를 확인해주세요.");
             }
 
             // 브랜드 ID 관련 외래 키 위반 오류 처리
             if (ex.getCause() != null && ex.getCause().getMessage().contains("BRAND_ENTITY")) {
-                throw new RuntimeException("Invalid categoryId: 브랜드가 존재하지 않습니다. id를 확인해주세요.");
+                throw new RuntimeException("브랜드가 존재하지 않습니다. id를 확인해주세요.");
             }
 
             // 그 외의 데이터 무결성 예외

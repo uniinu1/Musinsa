@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>브랜드 생성</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .popup {
+      width: 300px;
+      padding: 20px;
+      margin: 10px auto;
+      background-color: white;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    .popup h3 {
+      margin-bottom: 20px;
+    }
+    .popup input {
+      width: 80%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+    }
+    .popup button {
+      padding: 10px 20px;
+      margin-right: 10px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    .popup button.close {
+      background-color: #f44336;
+    }
+  </style>
+</head>
+<body>
+
+<div class="popup">
+  <h3>브랜드 생성</h3>
+  <label for="brandNameInput">브랜드 이름: </label>
+  <input type="text" id="brandNameInput" placeholder="브랜드 이름을 입력하세요">
+  <button id="saveBrandBtn">저장</button>
+</div>
+
+<script>
+  // 브랜드 저장 버튼 클릭 시 처리
+  document.getElementById('saveBrandBtn').addEventListener('click', function() {
+    const brandName = document.getElementById('brandNameInput').value;
+
+    if (brandName.trim() === '') {
+      alert('브랜드 이름을 입력해주세요.');
+      return;
+    }
+
+    // API 호출 (POST 방식)
+    fetch('/brand', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      // 여러 상품을 한 번에 등록하는 화면단은 추가 필요. 지금은 단일 브랜드만 등록가능
+      body: JSON.stringify([{ name: brandName }])
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.text();  // 응답이 없을 때에도 에러를 방지
+    })
+    .then(() => {
+      alert('브랜드가 성공적으로 생성되었습니다.');
+      window.close();  // 생성 후 메인 페이지로 이동
+    })
+    .catch(error => {
+      console.error('Error creating brand:', error);
+      alert('브랜드 생성 중 오류가 발생했습니다.');
+    });
+  });
+</script>
+
+</body>
+</html>

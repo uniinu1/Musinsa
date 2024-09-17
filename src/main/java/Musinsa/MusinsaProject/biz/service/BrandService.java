@@ -24,6 +24,14 @@ public class BrandService {
         this.allMapper = allMapper;
     }
 
+    public List<Brand> selectBrand() {
+        // BrandEntity를 Brand로 변환
+        List<BrandEntity> brandEntities = brandRepository.findAll();
+        return brandEntities.stream()
+                .map(allMapper::fromEntity) // BrandEntity를 Brand로 변환
+                .collect(Collectors.toList());
+    }
+
     public void insertBrand(List<Brand> brands) {
         //allMapper로 brands 값 BrandEntity로 매핑
         List<BrandEntity> brandEntities = brands.stream()

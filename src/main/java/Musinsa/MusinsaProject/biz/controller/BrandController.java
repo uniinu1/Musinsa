@@ -16,6 +16,12 @@ import java.util.List;
 @RequestMapping("/brand")
 public class BrandController {
     private BrandUseCase brandUseCase;
+    @GetMapping
+    @Operation(summary = "브랜드 조회")
+    public List<Brand> getBrand() {
+        return brandUseCase.getBrand();
+    }
+
     //List로 받아 여러 개 등록 가능하도록 함
     @PostMapping
     @Operation(summary = "브랜드 추가")

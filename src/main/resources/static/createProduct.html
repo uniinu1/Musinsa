@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상품 생성</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .popup {
+      width: 300px;
+      padding: 20px;
+      margin: 10px auto;
+      background-color: white;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    .popup h3 {
+      margin-bottom: 20px;
+    }
+    .popup input {
+      width: 80%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+    }
+    .popup button {
+      padding: 10px 20px;
+      margin-right: 10px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    .popup button.close {
+      background-color: #f44336;
+    }
+  </style>
+</head>
+<body>
+  <div class="popup">
+    <h3>상품 생성</h3>
+    <div>
+      <label for="productNameInput">상품 이름: </label>
+      <input type="text" id="productNameInput" placeholder="상품 이름을 입력하세요">
+    </div>
+    <div>
+      <label for="price">상품 가격:    </label>
+      <input type="text" id="price" placeholder="가격을 입력하세요">
+    </div>
+    <div>
+      <label for="categoryId">카테고리 ID: </label>
+      <input type="text" id="categoryId" placeholder="카테고리 id를 입력하세요">
+    </div>
+    <div>
+      <label for="brandId">브랜드 ID: </label>
+      <input type="text" id="brandId" placeholder="브랜드 id를 입력하세요">
+    </div>
+    <button id="saveProductBtn">저장</button>
+  </div>
+  <script>
+    // 상품 저장 버튼 클릭 시 처리
+    document.getElementById('saveProductBtn').addEventListener('click', function() {
+      const productName = document.getElementById('productNameInput').value;
+      const price = document.getElementById('price').value;
+      const categoryId = document.getElementById('categoryId').value;
+      const brandId = document.getElementById('brandId').value;
+
+      if (productName.trim() === '') {
+        alert('상품 이름을 입력해주세요.');
+        return;
+      }
+
+      if (price.trim() === '') {
+        alert('가격을 입력해주세요.');
+        return;
+      }
+
+      if (categoryId.trim() === '') {
+        alert('카테고리id를 입력해주세요.');
+        return;
+      }
+
+      if (brandId.trim() === '') {
+        alert('브랜드id를 입력해주세요.');
+        return;
+      }
+
+      // API 호출 (POST 방식)
+      fetch('/product', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        // 여러 상품을 한 번에 등록하는 화면단은 추가 필요. 지금은 단일 상품만 등록가능
+        body: JSON.stringify([
+                {
+                  name: productName,
+                  price: price,
+                  categoryId:{
+                    id: categoryId
+                  },
+                  brandId:{
+                    id:brandId
+                  }
+                }
+                ]
+        )
+      })
+              .then(response => {
+                if (!response.ok) {
+                  // 응답이 실패했을 경우 에러를 던짐
+                  return response.json().then(err => { throw new Error(err.message); });
+                }
+                return response.text();
+              })
+              .then(() => {
+                alert('상품이 성공적으로 생성되었습니다.');
+                window.close();  // 생성 후 메인 페이지로 이동
+              })
+              .catch(error => {
+                console.error('Error creating product:', error);
+                alert(`상품 생성 중 오류가 발생했습니다.: ${error.message}`);
+              });
+    });
+  </script>
+</body>
+</html>
